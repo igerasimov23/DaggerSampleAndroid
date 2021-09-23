@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun getAllData(){
-        viewModel.fetchData()
         viewModel.getLoadingStateLiveData.observe(this, receivedObserver)
     }
 

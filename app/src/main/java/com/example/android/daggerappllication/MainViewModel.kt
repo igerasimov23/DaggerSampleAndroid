@@ -14,8 +14,13 @@ class MainViewModel : ViewModel() {
     val getLoadingStateLiveData: LiveData<List<Article>>
         get() = loadingStateLiveData
 
+
+    init {
+        fetchData()
+    }
     fun fetchData() {
         val service = Retrofit.topStoriesApi
+
         viewModelScope.launch {
                 try {
                     val postRequest = service.getAllData()
