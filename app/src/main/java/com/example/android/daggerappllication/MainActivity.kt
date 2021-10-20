@@ -2,31 +2,22 @@ package com.example.android.daggerappllication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.daggerappllication.api.ApiInterface
 import com.example.android.daggerappllication.api.Article
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.lang.Exception
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(){
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var manager: RecyclerView.LayoutManager
-    private lateinit var myAdapter: RecyclerView.Adapter<*>
 
-//    @Inject
+    @Inject
     lateinit var viewModel: MainViewModel
 
-    private val receivedObserver = Observer(::onGroceryListResultReceived)
-
+    private val receivedObserver = Observer(::onResultReceived)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,17 +27,15 @@ class MainActivity : AppCompatActivity(){
 
         manager = LinearLayoutManager(this)
 
-        // TODO not update on device rotation
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         getAllData()
     }
 
-    private fun getAllData(){
+    private fun getAllData() {
         viewModel.getLoadingStateLiveData.observe(this, receivedObserver)
     }
 
-    private fun onGroceryListResultReceived(results: List<Article>) {
-        recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply{
+    private fun onResultReceived(results: List<Article>) {
+        recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
             adapter = MyAdapter(results)
             layoutManager = manager
         }
